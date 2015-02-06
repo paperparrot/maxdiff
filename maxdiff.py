@@ -29,5 +29,6 @@ def avg_imp(utilities_file, filter_var='none', weight='none'):
     else:
         filts = pd.read_csv(filter_var, index_col='session')
         data = pd.concat(rescaled, filts)
-        output = data.groupby()
+        output = data.groupby(data['filter_name'])
 
+    return output
