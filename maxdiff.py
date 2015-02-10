@@ -53,13 +53,12 @@ def avg_imp(utilities_file, filter_var=None, weight=None):
             output = output.append(local_df, ignore_index=True)
 
         # Filter columns are now deleted
-
         for column in filter_df.columns:
             output = output.drop(column, axis=1)
 
-        filt_list = pd.Series(output['filter'])
+        filter_list = pd.Series(output['filter'])
         output = output.drop('filter', axis=1)
-        # rescaled_output = output.divide(output.mean(axis=1))*100
-        # rescaled_output = pd.concat(rescaled_output, filt_list)
-        rescaled_output = output
-    return rescaled_output
+        rescaled_output = output.divide(output.mean(axis=1), axis=0)*100
+        rescaled_output['filter'] = filter_list
+
+    return rescaled_output.transpose()
