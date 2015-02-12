@@ -3,6 +3,7 @@ __author__ = 'sebastiengenty'
 
 import numpy as np
 import pandas as pd
+import sys
 
 """
 This program is made to take the utilities from a MaxDiff estimation and compute the relative importances for
@@ -70,3 +71,14 @@ def avg_imp(utilities_file, filter_var=None, weight_var=None):
     rescaled_output = rescaled_output.transpose()
     
     return rescaled_output
+
+def main():
+    args = sys.arv
+    file_name = args[1]
+    filters = args[2]
+    weights = args[3]
+    
+    avg_imp(file_name, filters, weights)
+    
+if __name__ == '__main__':
+    main()
