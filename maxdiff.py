@@ -44,8 +44,8 @@ def avg_imp(utilities_file, filter_var=None, weight_var=None):
         filter_df = pd.read_csv(filter_var, index_col='session')
         data = pd.merge(rescaled_df, filter_df, left_index=True, right_index=True)
 
-        # Loop that goes through each filter group and generates a row for each.
-        # Those are then added to the output_df table.
+        # Loop that goes through each filter group and generates a row for each
+        # Those are then added to the output_df table
         output_df = pd.DataFrame(data.mean()).transpose()
         for column in filter_df.columns:
             local_df = data.groupby(column).mean()
@@ -57,6 +57,7 @@ def avg_imp(utilities_file, filter_var=None, weight_var=None):
         for column in filter_df.columns:
             output_df = output_df.drop(column, axis=1)
 
+        # Compute the base sizes for each of the subgroups. First we compute total, then each subgroup using a loop
         base_size = pd.Series(data.ix[:, 1].count())
         for column in filter_df.columns:
             temp_count = filter_df[column].value_counts(sort=False, ascending=2)
@@ -64,21 +65,24 @@ def avg_imp(utilities_file, filter_var=None, weight_var=None):
             temp_count['filter'] = column
             base_size = base_size.append(temp_count)
 
+        filter_list = pd.Series(output_df['filter'])
         output_df = output_df.drop('filter', axis=1)
         rescaled_output = output_df.divide(output_df.mean(axis=1), axis=0)*100
+        rescaled_output['filter'] = filter_list
         print base_size
     
     rescaled_output = rescaled_output.transpose()
     
     return rescaled_output
 
+
 def main():
-    args = sys.arv
+    args = sys.argv
     file_name = args[1]
     filters = args[2]
     weights = args[3]
     
     avg_imp(file_name, filters, weights)
-    
+
 if __name__ == '__main__':
     main()
